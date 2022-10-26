@@ -84,17 +84,23 @@ const Form = () => {
 
   if (loading) {
     return (
-      <div>
-        <HashLoader color='#f8a619' />
-      </div>
+      <>
+        <div className='loader'>
+          <HashLoader color='#f8a619' />
+        </div>
+        <p className='loaderText'>Loading...</p>
+      </>
     );
   }
 
   if (error) {
     return (
-      <div>
-        There was an error fetching the data, please refresh the page and try
-        again!
+      <div className='errorBlock'>
+        <p>
+          There was an error fetching the data, please refresh the page and try
+          again!
+        </p>
+        <button onClick={() => window.location.reload()}>Try Again</button>
       </div>
     );
   }
