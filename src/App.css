@@ -24,6 +24,7 @@ ul {
 
 a {
   color: var(--yellow);
+  width: min-content;
 }
 
 a:hover {
