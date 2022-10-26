@@ -37,29 +37,10 @@ const Form = () => {
     mode: 'onChange',
   });
 
-  // fetch occupation and state data on mount
-  useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      const response = await fetch(
-        'https://frontend-take-home.fetchrewards.com/form'
-      );
+  // email regex
+  const emailPattern = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
 
-      const data = await response.json();
-
-      if (response.ok) {
-        setData(data);
-      } else {
-        setData({} as Data);
-        setError(true);
-      }
-
-      setLoading(false);
-    };
-
-    fetchData();
-  }, []);
-
+  // form submit handler
   const onSubmit = async (data: FormData) => {
     setLoading(true);
 
@@ -83,6 +64,29 @@ const Form = () => {
 
     setLoading(false);
   };
+
+  // fetch occupation and state data on mount
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      const response = await fetch(
+        'https://frontend-take-home.fetchrewards.com/form'
+      );
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setData(data);
+      } else {
+        setData({} as Data);
+        setError(true);
+      }
+
+      setLoading(false);
+    };
+
+    fetchData();
+  }, []);
 
   if (loading) {
     return (
@@ -114,7 +118,7 @@ const Form = () => {
         <div className='label__field'>
           <label htmlFor='name'>Name</label>
           {errors.name && (
-            <span className='label__field--error'>This field is required</span>
+            <span className='label__field--error'>Please enter your name</span>
           )}
         </div>
         <input
@@ -129,11 +133,13 @@ const Form = () => {
         <div className='label__field'>
           <label htmlFor='email'>Email</label>
           {errors.email && (
-            <span className='label__field--error'>This field is required</span>
+            <span className='label__field--error'>
+              Please enter a valid email address
+            </span>
           )}
         </div>
         <input
-          {...register('email', { required: true })}
+          {...register('email', { required: true, pattern: emailPattern })}
           type='email'
           className={errors.email && 'input__error'}
         />
@@ -143,12 +149,18 @@ const Form = () => {
       <div>
         <div className='label__field'>
           <label htmlFor='password'>Password</label>
-          {errors.password && (
-            <span className='label__field--error'>This field is required</span>
+          {errors.password?.type === 'required' ? (
+            <span className='label__field--error'>Please enter a password</span>
+          ) : errors.password?.type === 'minLength' ? (
+            <span className='label__field--error'>
+              Must be at least 6 characters
+            </span>
+          ) : (
+            ''
           )}
         </div>
         <input
-          {...register('password', { required: true })}
+          {...register('password', { required: true, minLength: 6 })}
           type='password'
           className={errors.password && 'input__error'}
         />
@@ -159,7 +171,9 @@ const Form = () => {
         <div className='label__field'>
           <label htmlFor='occupation'>Occupation</label>
           {errors.occupation && (
-            <span className='label__field--error'>This field is required</span>
+            <span className='label__field--error'>
+              Please choose your occupation
+            </span>
           )}
         </div>
         <select
@@ -180,7 +194,9 @@ const Form = () => {
         <div className='label__field'>
           <label htmlFor='state'>State</label>
           {errors.state && (
-            <span className='label__field--error'>This field is required</span>
+            <span className='label__field--error'>
+              Please choose your state
+            </span>
           )}
         </div>
         <select
