@@ -81,6 +81,12 @@ button:disabled {
   flex-direction: column;
 }
 
+.loader__container {
+  display: grid;
+  place-content: center;
+  height: 40vh;
+}
+
 @media (prefers-reduced-motion) {
   .loader {
     display: none;
