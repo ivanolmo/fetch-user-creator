@@ -35,6 +35,13 @@ const Form = () => {
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm<FormData>({
+    defaultValues: {
+      name: '',
+      email: '',
+      password: '',
+      occupation: '',
+      state: '',
+    },
     mode: 'onChange',
   });
 
@@ -119,11 +126,17 @@ const Form = () => {
         <div className='label__field'>
           <label htmlFor='name'>Name</label>
           {errors.name && (
-            <span className='label__field--error'>Please enter your name</span>
+            <span className='label__field--error'>{errors.name.message}</span>
           )}
         </div>
         <input
-          {...register('name', { required: true })}
+          {...register('name', {
+            required: { value: true, message: 'Please enter your name' },
+            minLength: {
+              value: 4,
+              message: 'Must be at least 4 characters',
+            },
+          })}
           type='text'
           className={errors.name && 'input__error'}
         />
@@ -140,7 +153,16 @@ const Form = () => {
           )}
         </div>
         <input
-          {...register('email', { required: true, pattern: emailPattern })}
+          {...register('email', {
+            required: {
+              value: true,
+              message: 'Please enter a valid email address',
+            },
+            pattern: {
+              value: emailPattern,
+              message: 'Please enter a valid email address',
+            },
+          })}
           type='email'
           className={errors.email && 'input__error'}
         />
@@ -150,18 +172,17 @@ const Form = () => {
       <div>
         <div className='label__field'>
           <label htmlFor='password'>Password</label>
-          {errors.password?.type === 'required' ? (
-            <span className='label__field--error'>Please enter a password</span>
-          ) : errors.password?.type === 'minLength' ? (
+          {errors.password && (
             <span className='label__field--error'>
-              Must be at least 6 characters
+              {errors.password.message}
             </span>
-          ) : (
-            ''
           )}
         </div>
         <input
-          {...register('password', { required: true, minLength: 6 })}
+          {...register('password', {
+            required: { value: true, message: 'Please enter a password' },
+            minLength: { value: 6, message: 'Must be at least 6 characters' },
+          })}
           type='password'
           className={errors.password && 'input__error'}
         />
@@ -173,12 +194,14 @@ const Form = () => {
           <label htmlFor='occupation'>Occupation</label>
           {errors.occupation && (
             <span className='label__field--error'>
-              Please choose your occupation
+              {errors.occupation.message}
             </span>
           )}
         </div>
         <select
-          {...register('occupation', { required: true })}
+          {...register('occupation', {
+            required: { value: true, message: 'Please choose your occupation' },
+          })}
           className={errors.occupation && 'input__error'}
         >
           <option value=''>Select an occupation</option>
@@ -195,13 +218,13 @@ const Form = () => {
         <div className='label__field'>
           <label htmlFor='state'>State</label>
           {errors.state && (
-            <span className='label__field--error'>
-              Please choose your state
-            </span>
+            <span className='label__field--error'>{errors.state.message}</span>
           )}
         </div>
         <select
-          {...register('state', { required: true })}
+          {...register('state', {
+            required: { value: true, message: 'Please choose your state' },
+          })}
           className={errors.state && 'input__error'}
         >
           <option value=''>Select a state</option>
