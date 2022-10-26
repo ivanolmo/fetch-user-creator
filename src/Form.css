@@ -84,6 +84,8 @@ button:disabled {
 .loader__container {
   display: grid;
   place-content: center;
+  width: calc(95vw - 2rem);
+  max-width: 800px;
   height: 40vh;
 }
 
