@@ -1,7 +1,6 @@
 form {
-  width: 100vw;
+  width: calc(95vw - 2rem);
   max-width: 800px;
-  padding-inline: 3rem;
 }
 
 form > * {
@@ -34,7 +33,7 @@ select {
 input:focus,
 select:focus {
   outline: none;
-  border: 2px solid #f8a619;
+  border: 2px solid var(--yellow);
 }
 
 button {
@@ -43,14 +42,14 @@ button {
   border: none;
   border-radius: 0.5rem;
   cursor: pointer;
-  background-color: #f8a619;
-  color: #2f0c38;
+  background-color: var(--yellow);
+  color: var(--purple);
   font-size: 1.2rem;
   font-weight: bold;
 }
 
 button:hover {
-  background-color: #febd4c;
+  background-color: var(--yellow-accent);
 }
 
 button:disabled {
@@ -65,12 +64,12 @@ button:disabled {
 }
 
 .label__field--error {
-  color: red;
+  color: var(--error);
   font-weight: normal;
 }
 
 .input__error {
-  border-color: red;
+  border-color: var(--error);
 }
 
 .loader__text {
