@@ -32,8 +32,9 @@ const Form = () => {
 
   const {
     register,
+    reset,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { errors, isSubmitting, isSubmitSuccessful },
   } = useForm<FormData>({
     defaultValues: {
       name: '',
@@ -96,14 +97,21 @@ const Form = () => {
     fetchData();
   }, []);
 
+  // reset form on successful submit
+  useEffect(() => {
+    if (isSubmitSuccessful) {
+      reset();
+    }
+  }, [isSubmitSuccessful, reset]);
+
   if (loading) {
     return (
-      <>
+      <div className='loader__container'>
         <div className='loader'>
           <HashLoader color='#f8a619' />
         </div>
         <p className='loader__text'>Loading...</p>
-      </>
+      </div>
     );
   }
 
