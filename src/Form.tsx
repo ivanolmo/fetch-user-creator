@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { HashLoader } from 'react-spinners';
 
 import './Form.css';
 
@@ -26,7 +27,7 @@ interface FormData {
 const Form = () => {
   const [data, setData] = useState<Data>({} as Data);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState(false);
 
   const {
     register,
@@ -49,7 +50,7 @@ const Form = () => {
         setData(data);
       } else {
         setData({} as Data);
-        setError('There was an error fetching the data');
+        setError(true);
       }
 
       setLoading(false);
@@ -59,6 +60,7 @@ const Form = () => {
   }, []);
 
   const onSubmit = async (data: FormData) => {
+    setLoading(true);
     // submit to post endpoint
     const response = await fetch(
       'https://frontend-take-home.fetchrewards.com/form',
@@ -70,7 +72,32 @@ const Form = () => {
         body: JSON.stringify(data),
       }
     );
+
+    if (response.ok) {
+      console.log('success');
+    } else {
+      console.log('error');
+    }
+
+    setLoading(false);
   };
+
+  if (loading) {
+    return (
+      <div>
+        <HashLoader color='#f8a619' />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div>
+        There was an error fetching the data, please refresh the page and try
+        again!
+      </div>
+    );
+  }
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
