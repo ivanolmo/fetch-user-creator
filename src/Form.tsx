@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { HashLoader } from 'react-spinners';
+import toast from 'react-hot-toast';
 
 import './Form.css';
 
@@ -57,9 +58,9 @@ const Form = () => {
     );
 
     if (response.ok) {
-      console.log('success');
+      toast.success('User created successfully!');
     } else {
-      console.log('error');
+      toast.error('User creation failed!');
     }
 
     setLoading(false);
