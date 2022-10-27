@@ -53,45 +53,51 @@ const Form = () => {
   const onSubmit = async (data: FormData) => {
     setLoading(true);
 
-    // submit to post endpoint
-    const response = await fetch(
-      'https://frontend-take-home.fetchrewards.com/form',
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
-      }
-    );
-
-    if (response.ok) {
-      toast.success('User created successfully!');
-    } else {
-      toast.error('User creation failed!');
-    }
-
-    setLoading(false);
+    await fetch('https://frontend-take-home.fetchrewards.com/form', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error();
+        }
+        toast.success('User created successfully');
+      })
+      .catch(() => {
+        toast.error('User creation failed!');
+      })
+      .finally(() => {
+        setLoading(false);
+        reset();
+      });
   };
 
   // fetch occupation and state data on mount
   useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      const response = await fetch(
-        'https://frontend-take-home.fetchrewards.com/form'
-      );
+    setLoading(true);
 
-      const data = await response.json();
-
-      if (response.ok) {
-        setData(data);
-      } else {
-        setData({} as Data);
-        setError(true);
-      }
-
-      setLoading(false);
+    const fetchData = () => {
+      fetch('https://frontend-take-home.fetchrewards.com/form')
+        .then((res) => {
+          if (!res.ok) {
+            setError(true);
+            throw new Error();
+          }
+          return res.json();
+        })
+        .then((data) => {
+          setData(data);
+        })
+        .catch(() => {
+          setData({} as Data);
+          setError(true);
+        })
+        .finally(() => {
+          setLoading(false);
+        });
     };
 
     fetchData();
@@ -106,7 +112,7 @@ const Form = () => {
 
   if (loading) {
     return (
-      <div className='loader__container'>
+      <div className='loader__container' aria-label='loader'>
         <div className='loader'>
           <HashLoader color='#f8a619' />
         </div>
@@ -128,13 +134,19 @@ const Form = () => {
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      aria-label='create a user'
+      name='form'
+    >
       {/* Name */}
       <div>
         <div className='label__field'>
           <label htmlFor='name'>Name</label>
           {errors.name && (
-            <span className='label__field--error'>{errors.name.message}</span>
+            <span className='label__field--error' role='alert'>
+              {errors.name.message}
+            </span>
           )}
         </div>
         <input
@@ -147,6 +159,8 @@ const Form = () => {
           })}
           type='text'
           className={errors.name && 'input__error'}
+          aria-label='name'
+          id='name'
         />
       </div>
 
@@ -155,7 +169,7 @@ const Form = () => {
         <div className='label__field'>
           <label htmlFor='email'>Email</label>
           {errors.email && (
-            <span className='label__field--error'>
+            <span className='label__field--error' role='alert'>
               Please enter a valid email address
             </span>
           )}
@@ -173,6 +187,8 @@ const Form = () => {
           })}
           type='email'
           className={errors.email && 'input__error'}
+          aria-label='email'
+          id='email'
         />
       </div>
 
@@ -181,7 +197,7 @@ const Form = () => {
         <div className='label__field'>
           <label htmlFor='password'>Password</label>
           {errors.password && (
-            <span className='label__field--error'>
+            <span className='label__field--error' role='alert'>
               {errors.password.message}
             </span>
           )}
@@ -193,6 +209,8 @@ const Form = () => {
           })}
           type='password'
           className={errors.password && 'input__error'}
+          aria-label='password'
+          id='password'
         />
       </div>
 
@@ -201,7 +219,7 @@ const Form = () => {
         <div className='label__field'>
           <label htmlFor='occupation'>Occupation</label>
           {errors.occupation && (
-            <span className='label__field--error'>
+            <span className='label__field--error' role='alert'>
               {errors.occupation.message}
             </span>
           )}
@@ -211,6 +229,8 @@ const Form = () => {
             required: { value: true, message: 'Please choose your occupation' },
           })}
           className={errors.occupation && 'input__error'}
+          aria-label='occupation'
+          id='occupation'
         >
           <option value=''>Select an occupation</option>
           {data.occupations?.map((occupation) => (
@@ -226,7 +246,9 @@ const Form = () => {
         <div className='label__field'>
           <label htmlFor='state'>State</label>
           {errors.state && (
-            <span className='label__field--error'>{errors.state.message}</span>
+            <span className='label__field--error' role='alert'>
+              {errors.state.message}
+            </span>
           )}
         </div>
         <select
@@ -234,6 +256,8 @@ const Form = () => {
             required: { value: true, message: 'Please choose your state' },
           })}
           className={errors.state && 'input__error'}
+          aria-label='state'
+          id='state'
         >
           <option value=''>Select a state</option>
           {data.states?.map((state) => (
