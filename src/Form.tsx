@@ -244,9 +244,11 @@ const Form = () => {
         </select>
       </div>
 
-      <button type='submit' disabled={isSubmitting}>
-        Create User
-      </button>
+      <div>
+        <button type='submit' disabled={isSubmitting}>
+          Create User
+        </button>
+      </div>
     </form>
   );
 };
